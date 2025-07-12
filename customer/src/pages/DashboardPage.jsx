@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { IoLogOutOutline } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 import {
   getCustomerInfo,
   getOrdersByIds,
@@ -13,7 +15,7 @@ export default function DashboardPage() {
   const [loadingOrders, setLoadingOrders] = useState(false);
   const [upcomingPayment, setUpcomingPayment] = useState(null);
   const [showOrders, setShowOrders] = useState(false);
-
+  const navigate = useNavigate();
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const customerId = query.get("customer_id");
@@ -76,6 +78,10 @@ export default function DashboardPage() {
         <h1 className="dashboard-greeting">
           {getGreeting()}, {customer.first_name} {customer.last_name}!
         </h1>
+        <button className="logout-btn" onClick={() => navigate("/")}>
+          {" "}
+          <IoLogOutOutline />
+        </button>
 
         <div className="dashboard-stats-grid">
           <div className="stat-card">
