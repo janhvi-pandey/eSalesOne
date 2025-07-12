@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { IoLogOutOutline } from "react-icons/io5";
-import { useNavigate } from "react-router-dom";
 import {
   getCustomerInfo,
   getOrdersByIds,
@@ -15,6 +14,7 @@ export default function DashboardPage() {
   const [loadingOrders, setLoadingOrders] = useState(false);
   const [upcomingPayment, setUpcomingPayment] = useState(null);
   const [showOrders, setShowOrders] = useState(false);
+  const [hasActiveSubscription, setHasActiveSubscription] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const query = new URLSearchParams(location.search);
@@ -31,6 +31,9 @@ export default function DashboardPage() {
           const subscriptions = getUpcomingSubscriptions(orders);
           if (subscriptions?.length > 0) {
             setUpcomingPayment(subscriptions[0]);
+            setHasActiveSubscription(true);
+          } else {
+            setHasActiveSubscription(false);
           }
         }
       } catch (err) {
@@ -47,7 +50,11 @@ export default function DashboardPage() {
   }, [customerId]);
 
   const loadOrders = async () => {
-    if (!customer?.order_list?.length) return;
+    if (!hasActiveSubscription) {
+      setError("No active subscription.");
+      return;
+    }
+
     try {
       setLoadingOrders(true);
       const orderIds = customer.order_list;
@@ -79,7 +86,6 @@ export default function DashboardPage() {
           {getGreeting()}, {customer.first_name} {customer.last_name}!
         </h1>
         <button className="logout-btn" onClick={() => navigate("/")}>
-          {" "}
           <IoLogOutOutline />
         </button>
 
@@ -104,7 +110,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {customer.order_list.length > 0 && (
+        {customer.order_list.length > 0 && hasActiveSubscription && (
           <button
             className="dashboard-button"
             onClick={() => {
@@ -120,7 +126,7 @@ export default function DashboardPage() {
           </button>
         )}
 
-        {showOrders && (
+        {showOrders && hasActiveSubscription && (
           <div className="orders-table-wrapper" id="orders-section">
             {loadingOrders ? (
               <p>Loading order details...</p>
@@ -161,6 +167,12 @@ export default function DashboardPage() {
             ) : (
               <p>No recent orders found.</p>
             )}
+          </div>
+        )}
+
+        {!hasActiveSubscription && (
+          <div className="error-msg" style={{ marginTop: "2rem" }}>
+            No active subscription.
           </div>
         )}
       </div>
