@@ -132,7 +132,7 @@ export default function DashboardPage() {
               <p>Loading order details...</p>
             ) : detailedOrders.length > 0 ? (
               <>
-                <h2 className="dashboard-subheading">Recent Orders</h2>
+                <h2 className="dashboard-subheading">Order History</h2>
                 <table className="orders-table">
                   <thead>
                     <tr>

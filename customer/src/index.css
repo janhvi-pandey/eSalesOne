@@ -1,5 +1,9 @@
+/* Body */
 body {
   margin: 0;
+  padding: 0;
+  height: 100vh;
+  overflow: hidden;
   font-family: "Segoe UI", sans-serif;
   background-color: #e3f0ff;
   color: #1f2d5a;
@@ -8,20 +12,20 @@ body {
 /* Landing Page */
 .landing-new-container {
   position: relative;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   background: linear-gradient(135deg, #d0e7ff, #8eb7fa, #7a92ba);
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  padding: 40px 20px;
+  padding: 20px;
   text-align: center;
 }
 
 .landing-content {
   position: relative;
   z-index: 10;
-  max-width: 800px;
+  max-width: 900px;
   color: #ffffff;
 }
 
@@ -106,6 +110,7 @@ body {
 /* Login Page */
 .login-container {
   height: 100vh;
+  overflow: hidden;
   background-color: #dbeafe;
   display: flex;
   justify-content: center;
@@ -155,7 +160,7 @@ body {
   font-size: 14px;
 }
 
-/* Logout Button */
+/* Logout */
 .logout-btn {
   position: absolute;
   top: 20px;
@@ -185,15 +190,16 @@ body {
   box-shadow: 0 0 0 3px rgba(31, 54, 172, 0.5);
 }
 
-/* Dashboard Page */
-
+/* Dashboard */
 .dashboard {
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   align-items: flex-start;
   justify-content: center;
   background-color: #f0f9ff;
-  padding: 40px 20px;
+  overflow: hidden;
+  padding: 20px;
+  background: linear-gradient(135deg, #d0e7ff, #8eb7fa, #7a92ba);
 }
 
 .dashboard-content {
@@ -201,8 +207,10 @@ body {
   width: 100%;
   background-color: white;
   border-radius: 12px;
-  padding: 40px;
+  padding: 20px;
   box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.08);
+  overflow-y: auto;
+  max-height: 100%;
   text-align: center;
 }
 
@@ -221,7 +229,7 @@ body {
 
 .dashboard-button {
   padding: 12px 28px;
-  background-color: #2563eb;
+  background-color: #1f36ac;
   color: white;
   border: none;
   border-radius: 8px;
