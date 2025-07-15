@@ -151,7 +151,7 @@ export default function DashboardPage() {
               {upcomingPayment ? (
                 <>
                   {upcomingPayment.date}
-                  {upcomingPayment.is_trial && <span> (Trial)</span>}
+                  {/* {upcomingPayment.is_trial && <span> (Trial)</span>} */}
                 </>
               ) : (
                 "None"
