@@ -1,15 +1,19 @@
-import React from "react";
-import Dashboard from "./components/Dashboard";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Sidebar from "./components/Sidebar.jsx";
+import Dashboard from "./components/Dashboard.jsx";
 import "../src/index.css";
-import Sidebar from "./components/Sidebar";
 
-function App() {
+const App = () => {
   return (
-    <div className="app-container">
-      <Sidebar />
-      <Dashboard />
-    </div>
+    <BrowserRouter>
+      <div className="app-container"> 
+        <Sidebar />
+        <Routes>
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;

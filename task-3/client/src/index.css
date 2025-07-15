@@ -6,6 +6,12 @@ body {
   color: #333;
 }
 
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Layout */
 .app-container {
   display: flex;
   height: 100vh;
@@ -16,39 +22,49 @@ body {
   width: 20%;
   background-color: #e0f0ff;
   padding: 2rem 1rem;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
 }
 
 .sidebar-logo {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: bold;
   color: #0b5394;
   margin-bottom: 2rem;
   text-align: center;
 }
 
-.sidebar-nav li {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 16px;
-  padding: 12px 18px;
-  margin-bottom: 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  color: #0b5394;
-  transition: background 0.2s ease;
+.sidebar-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-.sidebar-nav li:hover,
-.sidebar-nav .active {
-  background-color: #cbe7ff;
-  font-weight: 600;
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+  margin-bottom: 12px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #0b5394;
+  border-radius: 8px;
+  transition: all 0.2s ease-in-out;
+}
+
+.nav-link:hover {
+  background-color: #d0eaff;
   color: #083e70;
 }
 
+.nav-link.active {
+  background-color: #b5dbff;
+  color: #062d52;
+  font-weight: 600;
+}
+
 .nav-icon {
-  font-size: 18px;
+  font-size: 20px;
 }
 
 /* Dashboard */
