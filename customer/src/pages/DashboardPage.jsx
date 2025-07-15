@@ -178,89 +178,99 @@ export default function DashboardPage() {
 
         {showOrders && hasActiveSubscription && (
           <div className="orders-table-wrapper" id="orders-section">
-            <div className="orders-header">
+            <div className="orders-header-row">
               <h2 className="dashboard-subheading">Order History</h2>
               <button
-                className="filter-toggle-btn"
+                className="filter-icon-rounded"
                 onClick={() => setShowFilter(!showFilter)}
+                title="Toggle Filter"
               >
-                <FaFilter /> Filter
+                <FaFilter />
               </button>
             </div>
 
             {showFilter && (
               <div className="filter-card">
-                <div className="filter-field">
-                  <label>Order ID</label>
-                  <input
-                    type="text"
-                    value={filters.orderId}
-                    onChange={(e) =>
-                      setFilters({ ...filters, orderId: e.target.value })
-                    }
-                  />
-                </div>
-                <div className="filter-field">
-                  <label>Product ID</label>
-                  <input
-                    type="text"
-                    value={filters.productId}
-                    onChange={(e) =>
-                      setFilters({ ...filters, productId: e.target.value })
-                    }
-                  />
-                </div>
-                <div className="filter-field">
-                  <label>Campaign ID</label>
-                  <input
-                    type="text"
-                    value={filters.campaignId}
-                    onChange={(e) =>
-                      setFilters({ ...filters, campaignId: e.target.value })
-                    }
-                  />
-                </div>
-                <div className="filter-field">
-                  <label>Order Type</label>
-                  <div className="radio-group">
-                    <label>
-                      <input
-                        type="radio"
-                        name="orderType"
-                        value="One-time Purchase"
-                        checked={filters.orderType === "One-time Purchase"}
-                        onChange={(e) =>
-                          setFilters({ ...filters, orderType: e.target.value })
-                        }
-                      />
-                      One-time
-                    </label>
-                    <label>
-                      <input
-                        type="radio"
-                        name="orderType"
-                        value="Subscription"
-                        checked={filters.orderType === "Subscription"}
-                        onChange={(e) =>
-                          setFilters({ ...filters, orderType: e.target.value })
-                        }
-                      />
-                      Subscription
-                    </label>
-                    <label>
-                      <input
-                        type="radio"
-                        name="orderType"
-                        value=""
-                        checked={filters.orderType === ""}
-                        onChange={() =>
-                          setFilters({ ...filters, orderType: "" })
-                        }
-                      />
-                      All
-                    </label>
+                <div className="filter-row">
+                  <div className="filter-field">
+                    <label>Order ID</label>
+                    <input
+                      type="text"
+                      value={filters.orderId}
+                      onChange={(e) =>
+                        setFilters({ ...filters, orderId: e.target.value })
+                      }
+                    />
+                  </div>
+                  <div className="filter-field">
+                    <label>Product ID</label>
+                    <input
+                      type="text"
+                      value={filters.productId}
+                      onChange={(e) =>
+                        setFilters({ ...filters, productId: e.target.value })
+                      }
+                    />
+                  </div>
+                  <div className="filter-field">
+                    <label>Campaign ID</label>
+                    <input
+                      type="text"
+                      value={filters.campaignId}
+                      onChange={(e) =>
+                        setFilters({ ...filters, campaignId: e.target.value })
+                      }
+                    />
+                  </div>
+                  <div className="filter-field">
+                    <label>Order Type</label>
+                    <div className="radio-group">
+                      <label>
+                        <input
+                          type="radio"
+                          name="orderType"
+                          value="One-time Purchase"
+                          checked={filters.orderType === "One-time Purchase"}
+                          onChange={(e) =>
+                            setFilters({
+                              ...filters,
+                              orderType: e.target.value,
+                            })
+                          }
+                        />
+                        One-time
+                      </label>
+                      <label>
+                        <input
+                          type="radio"
+                          name="orderType"
+                          value="Subscription"
+                          checked={filters.orderType === "Subscription"}
+                          onChange={(e) =>
+                            setFilters({
+                              ...filters,
+                              orderType: e.target.value,
+                            })
+                          }
+                        />
+                        Subscription
+                      </label>
+                      <label>
+                        <input
+                          type="radio"
+                          name="orderType"
+                          value=""
+                          checked={filters.orderType === ""}
+                          onChange={() =>
+                            setFilters({ ...filters, orderType: "" })
+                          }
+                        />
+                        All
+                      </label>
+                    </div>
                   </div>
                 </div>
+
                 <div className="filter-actions">
                   <button onClick={applyFilters}>Apply</button>
                   <button onClick={clearFilters}>Clear</button>
