@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const productRoutes = require("./routes/Product");
+const productFetchLocalRoutes = require("./routes/ProductLocal");
 dotenv.config();
 
 const app = express();
@@ -16,9 +17,11 @@ mongoose
     console.error(" MongoDB connection error:", err);
   });
 
+const cors = require('cors');
+app.use(cors());
 
 app.use("/api/product", productRoutes);
-
+app.use("/api/local_products", productFetchLocalRoutes);
 
 
 app.get("/", (req, res) => {
