@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { IoLogOutOutline } from "react-icons/io5";
+import { FaFilter } from "react-icons/fa";
 import {
   getCustomerInfo,
   getOrdersByIds,
@@ -10,11 +11,20 @@ import {
 export default function DashboardPage() {
   const [customer, setCustomer] = useState(null);
   const [detailedOrders, setDetailedOrders] = useState([]);
+  const [filteredOrders, setFilteredOrders] = useState([]);
   const [error, setError] = useState("");
   const [loadingOrders, setLoadingOrders] = useState(false);
   const [upcomingPayment, setUpcomingPayment] = useState(null);
   const [showOrders, setShowOrders] = useState(false);
   const [hasActiveSubscription, setHasActiveSubscription] = useState(false);
+  const [showFilter, setShowFilter] = useState(false);
+  const [filters, setFilters] = useState({
+    orderId: "",
+    productId: "",
+    campaignId: "",
+    orderType: "",
+  });
+
   const navigate = useNavigate();
   const location = useLocation();
   const query = new URLSearchParams(location.search);
@@ -29,6 +39,7 @@ export default function DashboardPage() {
         if (data?.order_list?.length) {
           const orders = await getOrdersByIds(data.order_list);
           const subscriptions = getUpcomingSubscriptions(orders);
+
           if (subscriptions?.length > 0) {
             setUpcomingPayment(subscriptions[0]);
             setHasActiveSubscription(true);
@@ -37,8 +48,8 @@ export default function DashboardPage() {
           }
         }
       } catch (err) {
-        setError("Unable to load customer information.");
         console.error(err);
+        setError("Unable to load customer information.");
       }
     }
 
@@ -60,6 +71,7 @@ export default function DashboardPage() {
       const orderIds = customer.order_list;
       const details = await getOrdersByIds(orderIds);
       setDetailedOrders(details);
+      setFilteredOrders(details);
       setShowOrders(true);
     } catch (err) {
       console.error("Failed to load orders", err);
@@ -67,6 +79,45 @@ export default function DashboardPage() {
     } finally {
       setLoadingOrders(false);
     }
+  };
+
+  const applyFilters = () => {
+    const { orderId, productId, campaignId, orderType } = filters;
+
+    const filtered = detailedOrders
+      .map((order) => {
+        const matchingProducts = order.products.filter((product) => {
+          const isRecurring =
+            product.is_recurring === "1" || product.is_recurring === 1;
+          const typeLabel = isRecurring ? "Subscription" : "One-time Purchase";
+
+          return (
+            (!orderId || order.order_id.includes(orderId)) &&
+            (!productId || product.product_id.includes(productId)) &&
+            (!campaignId || order.campaign_id.includes(campaignId)) &&
+            (!orderType || typeLabel === orderType)
+          );
+        });
+
+        return matchingProducts.length > 0
+          ? { ...order, products: matchingProducts }
+          : null;
+      })
+      .filter(Boolean);
+
+    setFilteredOrders(filtered);
+    setShowFilter(false);
+  };
+
+  const clearFilters = () => {
+    setFilters({
+      orderId: "",
+      productId: "",
+      campaignId: "",
+      orderType: "",
+    });
+    setFilteredOrders(detailedOrders);
+    setShowFilter(false);
   };
 
   const getGreeting = () => {
@@ -94,7 +145,6 @@ export default function DashboardPage() {
             <p className="stat-label">Total Orders</p>
             <p className="stat-value">{customer.order_count}</p>
           </div>
-
           <div className="stat-card">
             <p className="stat-label">Next Payment</p>
             <p className="stat-value">
@@ -128,55 +178,145 @@ export default function DashboardPage() {
 
         {showOrders && hasActiveSubscription && (
           <div className="orders-table-wrapper" id="orders-section">
+            <div className="orders-header">
+              <h2 className="dashboard-subheading">Order History</h2>
+              <button
+                className="filter-toggle-btn"
+                onClick={() => setShowFilter(!showFilter)}
+              >
+                <FaFilter /> Filter
+              </button>
+            </div>
+
+            {showFilter && (
+              <div className="filter-card">
+                <div className="filter-field">
+                  <label>Order ID</label>
+                  <input
+                    type="text"
+                    value={filters.orderId}
+                    onChange={(e) =>
+                      setFilters({ ...filters, orderId: e.target.value })
+                    }
+                  />
+                </div>
+                <div className="filter-field">
+                  <label>Product ID</label>
+                  <input
+                    type="text"
+                    value={filters.productId}
+                    onChange={(e) =>
+                      setFilters({ ...filters, productId: e.target.value })
+                    }
+                  />
+                </div>
+                <div className="filter-field">
+                  <label>Campaign ID</label>
+                  <input
+                    type="text"
+                    value={filters.campaignId}
+                    onChange={(e) =>
+                      setFilters({ ...filters, campaignId: e.target.value })
+                    }
+                  />
+                </div>
+                <div className="filter-field">
+                  <label>Order Type</label>
+                  <div className="radio-group">
+                    <label>
+                      <input
+                        type="radio"
+                        name="orderType"
+                        value="One-time Purchase"
+                        checked={filters.orderType === "One-time Purchase"}
+                        onChange={(e) =>
+                          setFilters({ ...filters, orderType: e.target.value })
+                        }
+                      />
+                      One-time
+                    </label>
+                    <label>
+                      <input
+                        type="radio"
+                        name="orderType"
+                        value="Subscription"
+                        checked={filters.orderType === "Subscription"}
+                        onChange={(e) =>
+                          setFilters({ ...filters, orderType: e.target.value })
+                        }
+                      />
+                      Subscription
+                    </label>
+                    <label>
+                      <input
+                        type="radio"
+                        name="orderType"
+                        value=""
+                        checked={filters.orderType === ""}
+                        onChange={() =>
+                          setFilters({ ...filters, orderType: "" })
+                        }
+                      />
+                      All
+                    </label>
+                  </div>
+                </div>
+                <div className="filter-actions">
+                  <button onClick={applyFilters}>Apply</button>
+                  <button onClick={clearFilters}>Clear</button>
+                </div>
+              </div>
+            )}
+
             {loadingOrders ? (
               <p>Loading order details...</p>
-            ) : detailedOrders.length > 0 ? (
-              <>
-                <h2 className="dashboard-subheading">Order History</h2>
-                <table className="orders-table">
-                 <thead>
-  <tr>
-    <th>S.No.</th>
-    <th>Order ID</th>
-    <th>Product ID</th>
-    <th>Product Name</th>
-    <th>Campaign ID</th>
-    <th>Date</th>
-    <th>Order Type</th>
-    <th>Product Price</th>
-  </tr>
-</thead>
-<tbody>
-  {(() => {
-    let serial = 1;
-    return detailedOrders.flatMap((order) =>
-      order.products.map((product) => {
-        const isRecurring = product.is_recurring === "1" || product.is_recurring === 1;
-        const orderType = isRecurring ? "Subscription" : "One-time Purchase";
+            ) : filteredOrders.length > 0 ? (
+              <table className="orders-table">
+                <thead>
+                  <tr>
+                    <th>S.No.</th>
+                    <th>Order ID</th>
+                    <th>Product ID</th>
+                    <th>Product Name</th>
+                    <th>Campaign ID</th>
+                    <th>Date</th>
+                    <th>Order Type</th>
+                    <th>Product Price</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(() => {
+                    let serial = 1;
+                    return filteredOrders.flatMap((order) =>
+                      order.products.map((product) => {
+                        const isRecurring =
+                          product.is_recurring === "1" ||
+                          product.is_recurring === 1;
+                        const orderType = isRecurring
+                          ? "Subscription"
+                          : "One-time Purchase";
 
-        return (
-          <tr key={`${order.order_id}-${product.product_id}-${serial}`}>
-            <td>{serial++}</td>
-            <td>{order.order_id}</td>
-            <td>{product.product_id}</td>
-            <td>{product.name}</td>
-            <td>{order.campaign_id}</td>
-            <td>{order.acquisition_date}</td>
-            <td>{orderType}</td>
-            <td>${product.price}</td>
-          </tr>
-        );
-      })
-    );
-  })()}
-</tbody>
-
-
-
-                </table>
-              </>
+                        return (
+                          <tr
+                            key={`${order.order_id}-${product.product_id}-${serial}`}
+                          >
+                            <td>{serial++}</td>
+                            <td>{order.order_id}</td>
+                            <td>{product.product_id}</td>
+                            <td>{product.name}</td>
+                            <td>{order.campaign_id}</td>
+                            <td>{order.acquisition_date}</td>
+                            <td>{orderType}</td>
+                            <td>${product.price}</td>
+                          </tr>
+                        );
+                      })
+                    );
+                  })()}
+                </tbody>
+              </table>
             ) : (
-              <p>No recent orders found.</p>
+              <p>No matching orders found.</p>
             )}
           </div>
         )}

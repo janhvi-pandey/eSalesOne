@@ -328,3 +328,76 @@ body {
   background-color: #eef4ff;
   transition: background-color 0.2s ease;
 }
+
+.orders-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 40px;
+  margin-bottom: 20px;
+}
+
+.filter-icon-button {
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #1e3a8a;
+  transition: transform 0.2s ease;
+}
+
+.filter-icon-button:hover {
+  transform: scale(1.1);
+}
+
+.filter-card {
+  background-color: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+  animation: fadeIn 0.3s ease;
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.filter-card input[type="text"] {
+  padding: 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  flex: 1;
+  min-width: 180px;
+}
+
+.filter-card label {
+  font-size: 14px;
+  color: #1e3a8a;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.apply-filter-btn {
+  padding: 10px 20px;
+  background-color: #1f36ac;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s ease;
+}
+
+.apply-filter-btn:hover {
+  background-color: #1d4ed8;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
