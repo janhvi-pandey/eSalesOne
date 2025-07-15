@@ -17,7 +17,6 @@ const Dashboard = () => {
       <div className="table-container" style={{ overflowX: "auto" }}>
         <table
           className="product-table"
-          style={{ width: "100%", borderCollapse: "collapse" }}
         >
           <thead>
             <tr>

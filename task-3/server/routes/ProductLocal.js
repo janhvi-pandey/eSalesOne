@@ -24,7 +24,7 @@ router.get("/total_qty", async (req, res) => {
       const pid = product.product_id;
       const qty = parseInt(product.product_qty) || 0;
 
-      // fallback price logic
+     
       let unitPrice = parseFloat(product.price || "0");
       if (unitPrice === 0 && product.next_subscription_product_price) {
         unitPrice = parseFloat(product.next_subscription_product_price);
