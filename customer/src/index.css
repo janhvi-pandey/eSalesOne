@@ -1,20 +1,30 @@
-/* Body */
+html {
+  min-height: 100%;
+  background: linear-gradient(135deg, #d0e7ff, #8eb7fa, #7a92ba);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
 body {
   margin: 0;
   padding: 0;
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
+  overflow-x: hidden;
   font-family: "Segoe UI", sans-serif;
-  background-color: #e3f0ff;
   color: #1f2d5a;
+  background: none;
 }
 
-/* Landing Page */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 .landing-new-container {
   position: relative;
-  height: 100vh;
-  overflow: hidden;
-  background: linear-gradient(135deg, #d0e7ff, #8eb7fa, #7a92ba);
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -98,8 +108,7 @@ body {
 }
 
 @keyframes float {
-  0%,
-  100% {
+  0%, 100% {
     transform: translateY(0);
   }
   50% {
@@ -107,14 +116,14 @@ body {
   }
 }
 
-/* Login Page */
 .login-container {
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
+  overflow: visible;
   background-color: #dbeafe;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 20px 0;
 }
 
 .login-box {
@@ -160,7 +169,6 @@ body {
   font-size: 14px;
 }
 
-/* Logout */
 .logout-btn {
   position: absolute;
   top: 20px;
@@ -190,28 +198,24 @@ body {
   box-shadow: 0 0 0 3px rgba(31, 54, 172, 0.5);
 }
 
-/* Dashboard */
 .dashboard {
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  background-color: #f0f9ff;
-  overflow: hidden;
   padding: 20px;
-  background: linear-gradient(135deg, #d0e7ff, #8eb7fa, #7a92ba);
+  overflow: visible;
 }
 
 .dashboard-content {
   max-width: 1200px;
   width: 100%;
-  background-color: white;
-  border-radius: 12px;
   padding: 20px;
-  box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.08);
-  overflow-y: auto;
-  max-height: 100%;
   text-align: center;
+  box-shadow: none;
+  background: none;
+  border-radius: 0;
+  overflow: visible;
 }
 
 .dashboard-greeting {
@@ -244,7 +248,6 @@ body {
   transform: translateY(-2px);
 }
 
-/* Dashboard Stat Cards */
 .dashboard-stats-grid {
   display: flex;
   gap: 20px;
@@ -279,12 +282,12 @@ body {
   color: #1e3a8a;
 }
 
-/* Orders Table */
 .orders-table-wrapper {
   margin-top: 50px;
   padding: 0 20px;
   overflow-x: auto;
   text-align: left;
+  margin-bottom: 80px;
 }
 
 .orders-table {

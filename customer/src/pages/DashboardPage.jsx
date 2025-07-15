@@ -134,34 +134,45 @@ export default function DashboardPage() {
               <>
                 <h2 className="dashboard-subheading">Order History</h2>
                 <table className="orders-table">
-                  <thead>
-                    <tr>
-                      <th>S.No.</th>
-                      <th>Order ID</th>
-                      <th>Product IDs</th>
-                      <th>Total Products</th>
-                      <th>Campaign ID</th>
-                      <th>Gateway ID</th>
-                      <th>Date</th>
-                      <th>Status</th>
-                      <th>Total</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {detailedOrders.map((order, index) => (
-                      <tr key={order.order_id}>
-                        <td>{index + 1}</td>
-                        <td>{order.order_id}</td>
-                        <td>{order.product_ids}</td>
-                        <td>{order.total_products}</td>
-                        <td>{order.campaign_id}</td>
-                        <td>{order.gateway_id || "N/A"}</td>
-                        <td>{order.acquisition_date}</td>
-                        <td>{order.status}</td>
-                        <td>${order.order_total}</td>
-                      </tr>
-                    ))}
-                  </tbody>
+                 <thead>
+  <tr>
+    <th>S.No.</th>
+    <th>Order ID</th>
+    <th>Product ID</th>
+    <th>Product Name</th>
+    <th>Campaign ID</th>
+    <th>Date</th>
+    <th>Order Type</th>
+    <th>Product Price</th>
+  </tr>
+</thead>
+<tbody>
+  {(() => {
+    let serial = 1;
+    return detailedOrders.flatMap((order) =>
+      order.products.map((product) => {
+        const isRecurring = product.is_recurring === "1" || product.is_recurring === 1;
+        const orderType = isRecurring ? "Subscription" : "One-time Purchase";
+
+        return (
+          <tr key={`${order.order_id}-${product.product_id}-${serial}`}>
+            <td>{serial++}</td>
+            <td>{order.order_id}</td>
+            <td>{product.product_id}</td>
+            <td>{product.name}</td>
+            <td>{order.campaign_id}</td>
+            <td>{order.acquisition_date}</td>
+            <td>{orderType}</td>
+            <td>${product.price}</td>
+          </tr>
+        );
+      })
+    );
+  })()}
+</tbody>
+
+
+
                 </table>
               </>
             ) : (
