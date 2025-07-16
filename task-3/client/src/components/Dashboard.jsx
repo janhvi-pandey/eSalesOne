@@ -22,7 +22,6 @@ const Dashboard = () => {
             <tr>
               <th>S.No</th>
               <th>Product ID</th>
-              <th>Order Id</th>
               <th>Name</th>
               <th>Total Qty</th>
               <th>Total Price ($)</th>
@@ -40,7 +39,6 @@ const Dashboard = () => {
                 <tr key={prod.product_id}>
                   <td>{index + 1}</td>
                   <td>{prod.product_id}</td>
-                  <td>{prod.order_id}</td>
                   <td>{prod.name}</td>
                   <td>{prod.totalQty}</td>
                   <td>${parseFloat(prod.price).toFixed(2)}</td>
