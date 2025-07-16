@@ -13,7 +13,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// GET summary of products with total quantity and profit/loss
+// GET summary of products
 router.get("/total_qty", async (req, res) => {
   try {
     const products = await Product.find();

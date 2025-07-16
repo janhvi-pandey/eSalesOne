@@ -4,19 +4,20 @@ const stickyApi = require("../stickyApi");
 const Product = require("../models/Product");
 
 router.post("/", async (req, res) => {
-  //   console.log(" Sync Start");
-
   const { productIds, startDate, endDate } = req.body;
-  //   console.log("Request Body:", req.body);
+
+  console.log("Sync request received:", req.body);
 
   if (!productIds || !startDate || !endDate) {
+    console.log("Missing required fields.");
     return res
       .status(400)
       .json({ error: "productIds, startDate and endDate are required" });
   }
 
   try {
-    // Step 1: Call order_find to get matching order IDs
+    console.log("Calling /order_find with productIds:", productIds);
+
     const orderFindRes = await stickyApi.post("/order_find", {
       campaign_id: "all",
       start_date: startDate,
@@ -28,63 +29,85 @@ router.post("/", async (req, res) => {
       search_type: "all",
     });
 
-    // console.log(" Order Find Response:", orderFindRes.data);
-
+    console.log("Order find response:", orderFindRes.data);
     const orderIds = orderFindRes.data?.order_id || [];
+    console.log("Orders found:", orderIds.length);
 
     if (orderIds.length === 0) {
+      console.log("No orders found.");
       return res.status(200).json({ message: "No orders found" });
     }
 
-    // console.log(` Found ${orderIds.length} order(s)`);
+    console.log("Calling /order_view for order details");
 
-    // Step 2: Call order_view with all order IDs
     const orderViewRes = await stickyApi.post("/order_view", {
       order_id: orderIds,
     });
-    // console.log(" Order View Response:", orderViewRes.data);
 
-    // Step 3: Normalize object-of-objects to array
-    const orders = Object.values(orderViewRes.data.data);
-    // console.log(" Normalized Orders Array:", orders);
+    const orders = Object.values(orderViewRes.data.data || {});
+    console.log("Orders array:", orders.length);
+
+   
+    if (orders.length > 0) {
+      console.log(" First order sample structure:");
+      console.log(JSON.stringify(orders[0], null, 2));
+
+      if (orders[0].products) {
+        console.log("First order's products array:", JSON.stringify(orders[0].products, null, 2));
+      } else {
+        console.log(" 'products' field missing in first order!");
+      }
+    }
 
     let totalProducts = 0;
+    const normalizedProductIds = productIds.map(String); 
 
     for (const order of orders) {
       const products = order.products || [];
+      console.log("Processing order:", order.order_id, "Products in order:", products.length);
 
-      if (products.length > 0) {
-        const formattedProducts = products.map((p) => ({
+      console.log(
+        " Comparing with productIds:",
+        normalizedProductIds,
+        "\nProducts in order:",
+        products.map((p) => p.product_id)
+      );
+
+      const filteredProducts = products
+        .filter((p) => normalizedProductIds.includes(String(p.product_id)))
+        .map((p) => ({
           ...p,
           order_id: order.order_id,
         }));
 
-        // console.log(" Before saving products:", formattedProducts);
+      console.log("Filtered products:", filteredProducts.length);
 
+      if (filteredProducts.length > 0) {
         try {
-          await Product.insertMany(formattedProducts, { ordered: false });
-          //   console.log(" Products saved:", formattedProducts);
-          totalProducts += products.length;
+          await Product.insertMany(filteredProducts, { ordered: false });
+          console.log(" Inserted products for order:", order.order_id);
+          totalProducts += filteredProducts.length;
         } catch (insertErr) {
-          console.error(
-            ` Failed to insert products for order ${order.order_id}:`,
-            insertErr.message
-          );
+          console.error(" Insert error for order", order.order_id, ":", insertErr.message);
         }
       }
     }
 
-    // Final response
+    console.log(
+      " Sync complete. Total orders:",
+      orderIds.length,
+      "Total products inserted:",
+      totalProducts
+    );
+
     res.json({
-      message: " Sync complete",
+      message: "Sync complete",
       totalOrders: orderIds.length,
       totalProducts,
     });
   } catch (err) {
     console.error(" Sync failed:", err.message);
-    res
-      .status(500)
-      .json({ error: "Something went wrong", details: err.message });
+    res.status(500).json({ error: "Something went wrong", details: err.message });
   }
 });
 
