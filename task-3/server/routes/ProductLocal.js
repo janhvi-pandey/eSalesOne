@@ -18,7 +18,7 @@ router.get("/total_qty", async (req, res) => {
   try {
     const products = await Product.find();
     const productMap = {};
-    const FIXED_PRODUCTION_COST_PER_UNIT = 10;
+    const FIXED_PRODUCTION_COST_PER_UNIT = 2;
 
     for (const product of products) {
       const pid = product.product_id;
