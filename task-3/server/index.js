@@ -2,7 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const productRoutes = require("./routes/Product");
-const productFetchLocalRoutes = require("./routes/ProductLocal");
+// const productFetchLocalRoutes = require("./routes/ProductLocal");
+const productFetchRedis = require("./routes/ProductLocalRedis");
 dotenv.config();
 
 const app = express();
@@ -21,7 +22,9 @@ const cors = require('cors');
 app.use(cors());
 
 app.use("/api/product", productRoutes);
-app.use("/api/local_products", productFetchLocalRoutes);
+// app.use("/api/local_products", productFetchLocalRoutes);
+app.use("/api/local_products", productFetchRedis);
+
 
 
 app.get("/", (req, res) => {
