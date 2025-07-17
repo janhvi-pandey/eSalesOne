@@ -1,4 +1,3 @@
-// index.js
 const express = require('express');
 const client = require('./redisClient');
 const { getUserFromDB } = require('./db');
